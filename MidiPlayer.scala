@@ -46,21 +46,17 @@ class MidiPlayer extends Player {
    * Pre-conditions: midi sequencer should be available, midiCodes must have
    * been initialised
    * Post-condition: played sounds have been stopped, (threads have been stopped)
-   **/
+*/
    // TODO: maybe play that in a separate thread in order not to block?
    // TODO: catch exceptions (key not found + channels + noteOn)
-  override def play (chord : Chord, instru : Int) = {
-    val playSingleNote = (n: Note) => {
-      channels (instru) noteOn (midiCodes(n.name), 100)
+  override def play (chord : Chord [_], instru : Int) = {
+    type N = chord.Note
+    val playSingleNote = (n: N) => {
+      channels (instru) noteOn (midiCodes(n.toString), 100)
       Thread.sleep(100); //TODO: customise this delay
       // TODO: "channels (instru) noteOff (midiCodes(n.name))"  
       // -> maybe in the thread, and using "allNotesOff" after a delay
     }
-    chord match {
-      case n : Note
-              => playSingleNote(n)
-      case c : Chord 
-              => c.notes.foreach { playSingleNote(_) }
-    }
+    chord.notes foreach { playSingleNote(_) }
   }
 }

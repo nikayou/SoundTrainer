@@ -8,9 +8,10 @@ package soundTrainer;
  * the same order. 
  **/
 
-class Chord (val name: String, val _notes: List[Note]) {
-  override def toString = name + (_notes map (_ toString) reduceLeft(_+"->"+_))
-  def notes : List[Note] = _notes;
+class Chord [N] (val name: String, val _notes: List[N]) {
+ type Note = N
+  override def toString = name + ": " + (_notes map (_.toString) reduceLeft(_+"->"+_))
+  def notes : List[N] = _notes
 }
 
 object Chord {
