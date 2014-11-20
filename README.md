@@ -1,7 +1,7 @@
 # Sound Trainer 
 
 **Sound Trainer** helps musicians to train. It picks a random note/chord and 
-you have to guess either the sound, either the name. You can also view its 
+you have to guess either the sound or the name. You can also view its 
 position on instruments. 
 
 ## Requirements 
