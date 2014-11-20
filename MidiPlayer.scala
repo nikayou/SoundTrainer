@@ -59,4 +59,5 @@ class MidiPlayer extends Player {
     }
     chord.notes foreach { playSingleNote(_) }
   }
+
 }
