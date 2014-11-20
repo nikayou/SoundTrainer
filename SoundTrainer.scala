@@ -6,7 +6,9 @@ object SoundTrainer {
 
   def main(args: Array[String]) : Unit = {
     var cl = new XMLChordLoader;
-    cl loadFromXML("guitarChords.xml");
+    var ch = ChordHolder create(cl loadFromXML("guitarChords.xml"));
+    for (c <- ch.chords)
+      println(c)
     var p : Player = new MidiPlayer
   }
 }

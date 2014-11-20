@@ -4,8 +4,8 @@ import scala.xml.XML
 
 class XMLChordLoader {
   type C = Chord[String]
-  var chords : Array[C] = Array()
   def createChordFromXMLNode (node: xml.Node) : C = {
+    // a Chord[String] is a name and a list of string
     val notes = (node text) split " "
     var noteList : List[String] = List()
     for (n <- notes)
@@ -13,11 +13,12 @@ class XMLChordLoader {
     val name : String = ((node \\ "@id") text)
     new Chord (name, noteList)
   }
-  def loadFromXML (path: String) {
+  def loadFromXML (path: String) : List[C] = {
     val xml = XML.loadFile(path)
     val chords = (xml \\ "CHORD")
     var chordsList : List[C] = List()
+    // foreach node "CHORD", create a Chord with its data and add it to list
     chords.foreach (n => {chordsList = chordsList :+ createChordFromXMLNode(n) })
-    chordsList foreach (println(_))
+    chordsList
   }
 }
