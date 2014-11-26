@@ -15,9 +15,20 @@ import javax.sound.midi.MidiChannel;
  */
 class MidiPlayer extends Player {
 
-  val synthesizer : Synthesizer = MidiSystem.getSynthesizer();
+  val synthesizer : Synthesizer = 
+    try { 
+      MidiSystem.getSynthesizer();
+    } catch {
+      case mue: javax.sound.midi.MidiUnavailableException 
+        => println("Midi device is unavailable: "+mue) // TODO: log
+           null
+      case e: Exception 
+        => println("A problem occured while getting midi synthesizer: "+e)
+           null
+    }
   // TODO: also close when program ends
-  synthesizer.open();
+  if (synthesizer != null)
+    synthesizer.open()
   val channels : Array[MidiChannel] = synthesizer.getChannels();
 
   val midiCodes : Map[String, Int] = 
