@@ -50,14 +50,10 @@ class MidiPlayer extends Player {
    // TODO: maybe play that in a separate thread in order not to block?
    // TODO: catch exceptions (key not found + channels + noteOn)
   override def play (chord : Chord [_], instru : Int) = {
-    type N = chord.Note
-    val playSingleNote = (n: N) => {
-      channels (instru) noteOn (midiCodes(n.toString), 100)
-      Thread.sleep(100); //TODO: customise this delay
-      // TODO: "channels (instru) noteOff (midiCodes(n.name))"  
-      // -> maybe in the thread, and using "allNotesOff" after a delay
+    chord.notes foreach { 
+      x => channels (instru) noteOn (midiCodes(x.toString), 100);
+//      Thread.sleep(100) //TODO: customise this delay
     }
-    chord.notes foreach { playSingleNote(_) }
   }
 
 }

@@ -1,0 +1,10 @@
+<?xml version="1.0" ?>
+<!DOCTYPE chords [
+<!ELEMENT CHORDS (CHORD)*>
+<!ELEMENT CHORD (#PCDATA)*>
+<!ATTLIST CHORD id ID #REQUIRED>
+]>
+<CHORDS>
+  <CHORD id="C">C2 E3 G3 C3 E4</CHORD>
+  <CHORD id="E">B2 E3</CHORD>
+</CHORDS>
