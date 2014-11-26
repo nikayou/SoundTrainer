@@ -2,6 +2,7 @@ package soundTrainer;
 import javax.sound.midi.MidiSystem;
 import javax.sound.midi.Synthesizer;
 import javax.sound.midi.MidiChannel;
+import javax.sound.midi.MidiDevice;
 
 /*
  * MidiPlayer is one concrete class for Player that plays notes using a
@@ -20,11 +21,11 @@ class MidiPlayer extends Player {
       MidiSystem.getSynthesizer();
     } catch {
       case mue: javax.sound.midi.MidiUnavailableException 
-        => println("Midi device is unavailable: "+mue) // TODO: log
-           null
+      => println("Midi device is unavailable: "+mue) // TODO: log
+      null
       case e: Exception 
-        => println("A problem occured while getting midi synthesizer: "+e)
-           null
+      => println("A problem occured while getting midi synthesizer: "+e)
+      null
     }
   // TODO: also close when program ends
   if (synthesizer != null)
@@ -57,14 +58,28 @@ class MidiPlayer extends Player {
    * Pre-conditions: midi sequencer should be available, midiCodes must have
    * been initialised
    * Post-condition: played sounds have been stopped, (threads have been stopped)
-*/
-   // TODO: maybe play that in a separate thread in order not to block?
-   // TODO: catch exceptions (key not found + channels + noteOn)
+   */
+  // TODO: maybe play that in a separate thread in order not to block?
+  // TODO: catch exceptions (key not found + channels + noteOn)
   override def play (chord : Chord [_], instru : Int) = {
     chord.notes foreach { 
       x => channels (instru) noteOn (midiCodes(x.toString), 100);
-//      Thread.sleep(100) //TODO: customise this delay
+      //      Thread.sleep(100) //TODO: customise this delay
+      }
     }
+
   }
 
-}
+  object MidiPlayer {
+
+    def checkDevices = { 
+      val devices : Array[MidiDevice.Info] = MidiSystem.getMidiDeviceInfo();
+      if (devices.length == 0) {
+	println("No MIDI devices found");
+      } else {
+	for (dev : MidiDevice.Info <- devices) {
+	  println(dev);
+	}
+      }
+    }
+  }
