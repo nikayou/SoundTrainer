@@ -4,7 +4,13 @@ import javax.sound.midi.Synthesizer;
 import javax.sound.midi.MidiChannel;
 import javax.sound.midi.MidiDevice;
 
-import akka.actor._
+import akka.actor.Actor
+import akka.actor.ActorSystem
+import akka.actor.Props
+
+case class SetInstrument(instrument: Int)
+case class PlayNote(note: Int)
+case object Stop
 
 /*
  * MidiPlayer is one concrete class for Player that plays notes using a
@@ -17,6 +23,20 @@ import akka.actor._
  * - handle exception with devices, threads and availability
  */
 class MidiPlayer extends Player {
+
+  class PlayServer extends Actor {
+
+    var instrument : Int = 0;
+    
+    def receive = {
+      case SetInstrument(i) => instrument = i
+      case PlayNote(n) => channels (instrument) noteOn (n, 100);
+      case Stop => channels (instrument) allNotesOff
+    }
+  }
+
+  val actorSystem = ActorSystem("playSystem") //TODO: shutdown when leaving
+  val playServer = actorSystem.actorOf(Props(new PlayServer()), name="playServer");
 
   val synthesizer : Synthesizer = 
     try { 
@@ -39,9 +59,9 @@ class MidiPlayer extends Player {
       val notes = List("C","C#","D","D#","E","F","F#","G","G#","A","A#","B")
       val maxPitch = 8 // TODO: can this varry with the sequencer?
       /* note:
-       * pitch changes on the C, but first notes on the spectrum are A0, A#0, B0,
-       * and the very last is C8. We need to cheat for those values.
-       */
+      * pitch changes on the C, but first notes on the spectrum are A0, A#0, B0,
+      * and the very last is C8. We need to cheat for those values.
+      */
       // this var map will be injected in a val, so it won't be modifiable
       var map : Map[String, Int] = Map("A0"->21,"A#0"->22,"B0"->23)
       var index = 24;
@@ -64,24 +84,28 @@ class MidiPlayer extends Player {
   // TODO: maybe play that in a separate thread in order not to block?
   // TODO: catch exceptions (key not found + channels + noteOn)
   override def play (chord : Chord [_], instru : Int) = {
+    playServer ! SetInstrument(instru)
     chord.notes foreach { 
-      x => channels (instru) noteOn (midiCodes(x.toString), 100);
-      //      Thread.sleep(100) //TODO: customise this delay
-      }
+      x => playServer ! PlayNote(midiCodes(x.toString))
+      Thread.sleep(100) //TODO: customise this delay
     }
+    
+    Thread.sleep(300) // TODO: customise duration of chord
+    playServer ! Stop
 
   }
+}
 
-  object MidiPlayer {
+object MidiPlayer {
 
-    def checkDevices = { 
-      val devices : Array[MidiDevice.Info] = MidiSystem.getMidiDeviceInfo();
-      if (devices.length == 0) {
-	println("No MIDI devices found");
-      } else {
-	for (dev : MidiDevice.Info <- devices) {
-	  println(dev);
-	}
+  def checkDevices = { 
+    val devices : Array[MidiDevice.Info] = MidiSystem.getMidiDeviceInfo();
+    if (devices.length == 0) {
+      println("No MIDI devices found");
+    } else {
+      for (dev : MidiDevice.Info <- devices) {
+	println(dev);
       }
     }
   }
+}
