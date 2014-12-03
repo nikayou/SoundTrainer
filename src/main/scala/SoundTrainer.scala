@@ -13,7 +13,7 @@ object SoundTrainer {
     var p : Player = new MidiPlayer
     for (c <- ch.chords) {
       println(c)
-      p play (c, 0)
+      p play (c, 25)
       Thread.sleep(500);
     }
   }

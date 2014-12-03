@@ -26,12 +26,10 @@ class MidiPlayer extends Player {
 
   class PlayServer extends Actor {
 
-    var instrument : Int = 0;
-    
     def receive = {
-      case SetInstrument(i) => instrument = i
-      case PlayNote(n) => channels (instrument) noteOn (n, 100);
-      case Stop => channels (instrument) allNotesOff
+      case SetInstrument(i) => channels (0) programChange i
+      case PlayNote(n) => channels (0) noteOn (n, 100);
+      case Stop => channels (0) allNotesOff
     }
   }
 
@@ -90,9 +88,8 @@ class MidiPlayer extends Player {
       Thread.sleep(100) //TODO: customise this delay
     }
     
-    Thread.sleep(300) // TODO: customise duration of chord
+    Thread.sleep(500) // TODO: customise duration of chord
     playServer ! Stop
-
   }
 }
 
