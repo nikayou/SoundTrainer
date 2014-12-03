@@ -4,6 +4,8 @@ import javax.sound.midi.Synthesizer;
 import javax.sound.midi.MidiChannel;
 import javax.sound.midi.MidiDevice;
 
+import akka.actor._
+
 /*
  * MidiPlayer is one concrete class for Player that plays notes using a
  * midi sequencer. It holds a map [String->Int] whose keys are the name of the
