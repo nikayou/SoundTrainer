@@ -6,11 +6,12 @@ package soundTrainer;
  * The notes are given as a list, because one player could want to add a delay
  * between two notes of the same chord, so they need to be always played in
  * the same order. 
- **/
-
-class Chord [N] (val name: String, val _notes: List[N]) {
+ */
+// TODO: a chord is different from one instrument to an other
+class Chord [N] (private val _name: String, private val _notes: List[N]) {
  type Note = N
-  override def toString = name + ": " + (_notes map (_.toString) reduceLeft(_+"->"+_))
+  override def toString = _name + ": " + (_notes map (_.toString) reduceLeft(_+"->"+_))
+  def name : String = _name
   def notes : List[N] = _notes
 }
 

@@ -1,6 +1,6 @@
 package soundTrainer;
 
-class ChordHolder(val chords: Array[Chord[_]]) {  
+class ChordHolder(val chords: Array[Chord[_]]) { 
 }
 
 object ChordHolder {
