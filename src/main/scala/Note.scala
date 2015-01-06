@@ -1,4 +1,4 @@
-package soundTrainer;
+package soundTrainer
 
 /**
  * A note is a special Chord with only one Note. The concept is separated

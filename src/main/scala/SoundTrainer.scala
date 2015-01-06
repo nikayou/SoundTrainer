@@ -1,6 +1,7 @@
 package soundTrainer
 
-trait SoundTrainer {
+trait SoundTrainer 
+{
 //  type Note
   val chordsHolder : ChordHolder
   val player : Player

@@ -1,4 +1,5 @@
-package soundTrainer;
+package soundTrainer
+
 
 /*
  * A chord is a set of notes played at the same time.
@@ -8,13 +9,15 @@ package soundTrainer;
  * the same order. 
  */
 // TODO: a chord is different from one instrument to an other
-class Chord [N] (private val _name: String, private val _notes: List[N]) {
+class Chord [N] (private val _name: String, private val _notes: List[N]) 
+{
  type Note = N
   override def toString = _name + ": " + (_notes map (_.toString) reduceLeft(_+"->"+_))
   def name : String = _name
   def notes : List[N] = _notes
 }
 
-object Chord {
+object Chord 
+{
 
 }

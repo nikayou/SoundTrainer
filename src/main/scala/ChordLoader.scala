@@ -1,8 +1,10 @@
-package soundTrainer;
+package soundTrainer
 
 import scala.xml.XML
 
-class XMLChordLoader {
+
+class XMLChordLoader 
+{
   type C = Chord[String]
   def createChordFromXMLNode (node: xml.Node) : C = {
     // a Chord[String] is a name and a list of string

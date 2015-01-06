@@ -1,5 +1,6 @@
-package soundTrainer;
+package soundTrainer
 
-abstract class Player {
+abstract class Player 
+{
   def play (c : Chord[_], instrument : Int);
 }

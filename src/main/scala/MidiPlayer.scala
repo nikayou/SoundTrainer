@@ -1,12 +1,14 @@
-package soundTrainer;
-import javax.sound.midi.MidiSystem;
-import javax.sound.midi.Synthesizer;
-import javax.sound.midi.MidiChannel;
-import javax.sound.midi.MidiDevice;
+package soundTrainer
+
+import javax.sound.midi.MidiSystem
+import javax.sound.midi.Synthesizer
+import javax.sound.midi.MidiChannel
+import javax.sound.midi.MidiDevice
 
 import akka.actor.Actor
 import akka.actor.ActorSystem
 import akka.actor.Props
+
 
 case class SetInstrument(instrument: Int)
 case class PlayNote(note: Int)
@@ -22,9 +24,11 @@ case object Stop
  * - check if a separate thread for playing sounds is a good idea
  * - handle exception with devices, threads and availability
  */
-class MidiPlayer extends Player {
+class MidiPlayer extends Player 
+{
 
-  class PlayServer extends Actor {
+  class PlayServer extends Actor 
+  {
 
     def receive = {
       case SetInstrument(i) => channels (0) programChange i
@@ -93,7 +97,8 @@ class MidiPlayer extends Player {
   }
 }
 
-object MidiPlayer {
+object MidiPlayer 
+{
 
   def checkDevices = { 
     val devices : Array[MidiDevice.Info] = MidiSystem.getMidiDeviceInfo();
