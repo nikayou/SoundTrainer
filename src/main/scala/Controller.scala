@@ -18,8 +18,13 @@ object Controller extends AppController
     val possibleChords = chordsHolder.chords // TODO: inter preferences' filters
     val chord = possibleChords(Random.nextInt (possibleChords.length))
     currentChord = Some(chord)
-    if (mode == ModeSound()) //TODO: incorrect
-      player play (chord, 0) // TODO: remove, according to the mode
+    if (mode == ModeSound())
+      player play (chord, 0)
+  }
+  
+  def playCurrentNote = currentChord match {
+    case Some(c) => player play (c, 0)
+    case _ => println("no current chord") // TODO: errlog
   }
 }
 

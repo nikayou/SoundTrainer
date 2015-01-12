@@ -15,5 +15,7 @@ object MainGUI extends sw.SimpleSwingApplication
   override def startup (args: Array[String]) = println("start")
   override def quit = println ("quit")
   override def shutdown = println("shutdown")
+
+  top pack()
   top open
 }

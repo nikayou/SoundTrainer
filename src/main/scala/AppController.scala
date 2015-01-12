@@ -10,5 +10,6 @@ trait AppController
   val chordsHolder : ChordHolder
   val player : Player
   var currentChord : Option[Chord[_]] = None
-  var mode : AppMode = new ModeSound
+  var mode : AppMode = ModeSound()
+  def changeMode (m: AppMode) = { mode = m }
 }
