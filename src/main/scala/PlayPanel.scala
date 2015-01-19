@@ -21,7 +21,7 @@ object PlayPanel extends sw.FlowPanel()
       action = sw.Action("Sound") {
 	controller changeMode (ModeSound())
 	controller changeNote;
-	label.text = ""
+	label.text = " "
       }
     }
     contents += new sw.Button {
