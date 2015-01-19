@@ -4,9 +4,8 @@ import scala.{swing => sw}
 
 object PlayPanel extends sw.FlowPanel()
 {
-  val controller = Controller // TODO: use as member, not singleton
+  val controller = new Controller
   val label = new sw.Label(" ") {
-    //    opaque = true
     foreground = UISkin.labelForeground
   }
   def reveal = {

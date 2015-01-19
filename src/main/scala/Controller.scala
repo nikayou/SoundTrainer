@@ -3,7 +3,7 @@ package soundTrainer
 import scala.util.Random
 
 
-object Controller extends AppController
+class Controller extends AppController
 {
   type Note = String
   private val xml = new XMLChordLoader
