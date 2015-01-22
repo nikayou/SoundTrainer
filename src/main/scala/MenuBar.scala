@@ -6,11 +6,15 @@ import scala.{swing => sw}
 abstract class MenuBar extends sw.MenuBar 
 {
   // TODO: all members should be val
-  var playerDialog : Option[sw.Dialog] = None
+  var controller : Controller = new Controller
+  var playerDialog : Option[sw.Dialog] = 
+    controller.player.preferences match {
+      case None => None
+      case Some(p) => Some(p.dialog)
+    }
   var chordsDialog : Option[sw.Dialog] = None
   var skinDialog : Option[sw.Dialog] = None
   var instrumentsPlugins : List[Instrument] = Nil
-  var controller : Controller = new Controller
   contents += new sw.Menu("New") {
     contents += new sw.MenuItem ("Note")
     contents += new sw.MenuItem ("Sound")
@@ -25,27 +29,23 @@ abstract class MenuBar extends sw.MenuBar
   contents += new sw.Menu("Preferences") {
     chordsDialog match {
       case Some(d) =>
-	contents += new sw.MenuItem("Chords") {
-	  action = new sw.Action("Chords_") {
+	contents += new sw.MenuItem(new sw.Action("Chords") {
 	    def apply = d open
-	  }}
+	  })
       case None => 
     }
     playerDialog match {
       case Some(d) =>
-	contents += new sw.MenuItem("Player") {
-	  action = new sw.Action("Player_") {
+	contents += new sw.MenuItem(new sw.Action("Player") {
 	    def apply = d open
-	  }
-	}
+	  })
       case None => 
     }
     skinDialog match {
       case Some(d) => 
-	contents += new sw.MenuItem("Skin") {
-	  action = new sw.Action("Skin_") {
+	contents += new sw.MenuItem(new sw.Action("Skin") {
 	    def apply = d open
-	  }}
+	  })
       case None => 
     }
     
