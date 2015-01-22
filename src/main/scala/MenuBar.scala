@@ -3,10 +3,9 @@ package soundTrainer
 import scala.{swing => sw}
 
 
-abstract class MenuBar extends sw.MenuBar 
+abstract class MenuBar(val controller: Controller) extends sw.MenuBar 
 {
   // TODO: all members should be val
-  var controller : Controller = new Controller
   var playerDialog : Option[sw.Dialog] = 
     controller.player.preferences match {
       case None => None

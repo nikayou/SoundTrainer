@@ -2,9 +2,8 @@ package soundTrainer
 
 import scala.{swing => sw}
 
-object PlayPanel extends sw.FlowPanel()
+class PlayPanel(val controller: Controller) extends sw.FlowPanel()
 {
-  val controller = new Controller
   val label = new sw.Label(" ") {
     foreground = UISkin.labelForeground
   }

@@ -5,15 +5,14 @@ import scala.{swing => sw}
 
 object MainGUI extends sw.SimpleSwingApplication 
 {
+  private val controller = new Controller
 
   def top = new sw.MainFrame {
     title = "Sound Trainer"
-    contents = PlayPanel
-    menuBar = new MenuBar {
-      controller = new Controller
-      playerDialog = Some(new MidiConfigDialog(controller))
-      chordsDialog = playerDialog
-      skinDialog = playerDialog
+    contents = new PlayPanel(controller)
+    menuBar = new MenuBar(controller) {
+//      chordsDialog = playerDialog
+//      skinDialog = playerDialog
     }
     pack()
   }
