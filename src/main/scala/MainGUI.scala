@@ -10,10 +10,7 @@ object MainGUI extends sw.SimpleSwingApplication
   def top = new sw.MainFrame {
     title = "Sound Trainer"
     contents = new PlayPanel(controller)
-    menuBar = new MenuBar(controller) {
-//      chordsDialog = playerDialog
-//      skinDialog = playerDialog
-    }
+    menuBar = new MenuBar(controller)
     pack()
   }
 
