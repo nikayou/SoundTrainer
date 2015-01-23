@@ -1,15 +1,10 @@
 package soundTrainer
 
-sealed class AppMode
-case class ModeNote() extends AppMode
-case class ModeSound() extends AppMode
-
 trait AppController
 {
-//  type Note
+  type Note
   val chordsHolder : ChordHolder
   val player : Player
   var currentChord : Option[Chord[_]] = None
-  var mode : AppMode = ModeSound()
-  def changeMode (m: AppMode) = { mode = m }
+  var currentNote : Option[Note] = None
 }

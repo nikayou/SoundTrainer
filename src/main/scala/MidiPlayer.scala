@@ -80,7 +80,7 @@ class MidiPlayer extends Player
       map + (("C"+maxPitch) -> index)
       // return will inject this map in midiCodes
     }
-
+  override val notes = (midiCodes keys).toSeq
   /**
    * Plays the given Chord (or Note) with the midi synthesizer set with the
    * given instrument midi channel.
@@ -100,6 +100,14 @@ class MidiPlayer extends Player
     Thread.sleep(_preferences.duration) // TODO: customise duration of chord
     playServer ! Stop
   }
+
+  def play (note : String, instru: Int) = {
+    playServer ! SetInstrument(instru)
+    playServer ! PlayNote(midiCodes(note.toString))
+    Thread.sleep(_preferences.duration) // TODO: customise duration of chord
+    playServer ! Stop    
+  }
+
 }
 
 object MidiPlayer 

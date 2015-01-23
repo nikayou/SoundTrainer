@@ -4,10 +4,12 @@ import scala.{swing => sw}
 
 class PlayPanel(val controller: Controller) extends sw.FlowPanel()
 with Observer[OutEvt]
+with Observable[InEvt]
 {
   observe(controller)
-  override def receive (e: OutEvt) = {
-    println("playPanel received "+e)
+  override def receive (e: OutEvt) = e match {
+	case ShowName(n) => label.text = n.toString
+	  case Hide => label.text = " "
   }
 
   val label = new sw.Label(" ") {
@@ -24,16 +26,12 @@ with Observer[OutEvt]
   val newGroup = new sw.GridPanel(2, 1) {
     contents += new sw.Button {
       action = sw.Action("Sound") {
-	controller changeMode (ModeSound())
-	controller changeNote;
-	label.text = " "
+	publishTo(ChangeNoteEvt(false, true), controller)
       }
     }
     contents += new sw.Button {
       action = sw.Action("Note") {
-	controller changeMode (ModeNote())
-	controller changeNote;
-	reveal
+	publishTo(ChangeNoteEvt(true, false), controller)
       }
     }
   }
@@ -45,11 +43,13 @@ with Observer[OutEvt]
     val buttonZone = new sw.BorderPanel() {
       val playButton = new sw.Button {
 	action = sw.Action("♫") {
-	  controller playCurrentNote
+	  publishTo(Play, controller)
 	}
       }
       val revealButton = new sw.Button {
-	action = sw.Action("^") { reveal }
+	action = sw.Action("^") { 
+	  publishTo(Show(true), controller) 
+	}
       }
       layout(playButton) = sw.BorderPanel.Position.West
       layout(revealButton) = sw.BorderPanel.Position.East

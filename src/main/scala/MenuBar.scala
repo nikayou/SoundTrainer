@@ -17,11 +17,10 @@ with Observable[InEvt]
   var instrumentsPlugins : List[Instrument] = Nil
   contents += new sw.Menu("New") {
     contents += new sw.MenuItem (new sw.Action("Note") {
-      def apply = controller.changeNote
-      publishTo(InEvt(32), controller)
+      def apply = publishTo(ChangeNoteEvt(true, false), controller)
     })
     contents += new sw.MenuItem (new sw.Action("Sound") {
-      def apply = controller.changeNote
+      def apply = publishTo(ChangeNoteEvt(false, true), controller)
     })
   }
   contents += new sw.Menu("Reveal") {
