@@ -8,7 +8,7 @@ class Controller extends AppController
   type Note = String
   private val xml = new XMLChordLoader
   // TODO: don't load a specific instrument but a general database
-  val chordsHolder = ChordHolder create (xml loadFromXML("res/guitarChords.xml"))
+  val chordsHolder = ChordHolder create (xml loadFromXML("res/chords.xml"))
   val player : Player = new MidiPlayer
 
   // TODO: preferences and chords filter
