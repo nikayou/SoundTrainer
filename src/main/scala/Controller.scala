@@ -2,8 +2,12 @@ package soundTrainer
 
 import scala.util.Random
 
+case class InEvt (x: Int) 
+case class OutEvt (x: String)
 
-class Controller extends AppController
+class Controller extends AppController 
+with Observer[InEvt] 
+with Observable[OutEvt]
 {
   type Note = String
   private val xml = new XMLChordLoader
@@ -20,6 +24,7 @@ class Controller extends AppController
     currentChord = Some(chord)
     if (mode == ModeSound())
       player play (chord, 0)
+    publish(OutEvt("lol"))
   }
   
   def playCurrentNote = currentChord match {
@@ -27,7 +32,9 @@ class Controller extends AppController
     case _ => println("no current chord") // TODO: errlog
   }
 
-  
-  
+  override def receive (e: InEvt) = {
+    println("controller received "+e)
+  }
+
 }
 

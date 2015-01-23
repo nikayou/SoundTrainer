@@ -3,7 +3,13 @@ package soundTrainer
 import scala.{swing => sw}
 
 class PlayPanel(val controller: Controller) extends sw.FlowPanel()
+with Observer[OutEvt]
 {
+  observe(controller)
+  override def receive (e: OutEvt) = {
+    println("playPanel received "+e)
+  }
+
   val label = new sw.Label(" ") {
     foreground = UISkin.labelForeground
   }

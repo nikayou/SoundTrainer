@@ -2,9 +2,10 @@ package soundTrainer
 
 import scala.{swing => sw}
 
-
-class MenuBar(val controller: Controller) extends sw.MenuBar 
+class MenuBar(val controller: Controller) extends sw.MenuBar
+with Observable[InEvt]
 {
+  controller.observe(this)
   // TODO: all members should be val
   val playerDialog : Option[sw.Dialog] = 
     controller.player.preferences match {
@@ -17,6 +18,7 @@ class MenuBar(val controller: Controller) extends sw.MenuBar
   contents += new sw.Menu("New") {
     contents += new sw.MenuItem (new sw.Action("Note") {
       def apply = controller.changeNote
+      publishTo(InEvt(32), controller)
     })
     contents += new sw.MenuItem (new sw.Action("Sound") {
       def apply = controller.changeNote
