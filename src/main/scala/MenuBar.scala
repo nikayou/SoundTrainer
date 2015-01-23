@@ -15,12 +15,20 @@ class MenuBar(val controller: Controller) extends sw.MenuBar
   var skinDialog : Option[sw.Dialog] = None
   var instrumentsPlugins : List[Instrument] = Nil
   contents += new sw.Menu("New") {
-    contents += new sw.MenuItem ("Note")
-    contents += new sw.MenuItem ("Sound")
+    contents += new sw.MenuItem (new sw.Action("Note") {
+      def apply = controller.changeNote
+    })
+    contents += new sw.MenuItem (new sw.Action("Sound") {
+      def apply = controller.changeNote
+    })
   }
   contents += new sw.Menu("Reveal") {
-    contents += new sw.MenuItem ("Name")
-    contents += new sw.MenuItem ("Sound")
+    contents += new sw.MenuItem (new sw.Action("Note") {
+      def apply = println("revealing note")
+    })
+    contents += new sw.MenuItem (new sw.Action("Sound") {
+      def apply = println("revealing sound")
+    })
   }
   contents += new sw.Menu("Instruments") {
     //TODO: load plugins
