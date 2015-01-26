@@ -13,8 +13,7 @@ case object Play extends InEvt
 
 // events sent by the controller
 sealed abstract class OutEvt extends swing.event.Event
-case class ChangedNote extends OutEvt
-case class ChangedChord extends OutEvt
+case class ChangedMode(chord: Boolean) extends OutEvt
 case class ShowName(n: String) extends OutEvt
 case object Hide extends OutEvt
 
@@ -31,14 +30,14 @@ with Observable[OutEvt]
   // TODO: preferences and chords filter
 
   // changes the current note for a random note
-  def newNote : Chord[_] = { 
+  private def newNote : Chord[_] = { 
     val note = player.notes(Random.nextInt (player.notes.length))
     val chord = new Chord(note, List(note))
     currentChord = Some(chord)
     chord
   }
 
-  def newChord : Chord[_] = { 
+  private def newChord : Chord[_] = { 
     val possibleChords = chordsHolder.kept // TODO: inter preferences' filters
     val chord = possibleChords(Random.nextInt (possibleChords.length))
     currentChord = Some(chord)
@@ -46,15 +45,15 @@ with Observable[OutEvt]
   }
 
   
-  def playCurrentNote = currentChord match {
+  private def playCurrentNote = currentChord match {
     case Some(c) => player play (c, 0)
     case _ => println("no current chord") // TODO: errlog
   }
 
   override def receive (e: InEvt) = e match {
-    case ChangeMode => { modeChord = !modeChord }
-    case ModeChord => { modeChord = true }
-    case ModeNote => { modeChord = false }
+    case ChangeMode => { changeMode(!modeChord) }
+    case ModeChord => { changeMode(true) }
+    case ModeNote => { changeMode(false) }
     case Change(show, play) => { 
       val c : Chord[_] = if (modeChord) newChord else newNote;
       if (play) player play (c, 0)
@@ -73,5 +72,9 @@ with Observable[OutEvt]
     }
   }
 
+    private def changeMode (chord: Boolean) = {
+      modeChord = chord
+      publish(ChangedMode(chord))
+    }
 
 }

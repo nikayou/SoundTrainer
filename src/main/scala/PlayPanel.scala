@@ -8,30 +8,39 @@ with Observable[InEvt]
 {
   observe(controller)
   override def receive (e: OutEvt) = e match {
-    case ShowName(n) => label.text = n.toString
-    case Hide => label.text = " "
+    case ShowName(n) => nameLabel.text = n.toString
+    case Hide => nameLabel.text = " "
+    case ChangedMode (t) => if (t) changeModeName("Chord")
+			    else changeModeName("Note")
   }
 
-  val label = new sw.Label(" ") {
+  private def changeModeName (s: String) = {
+    modeLabel.text = s 
+    modeLabel.repaint
+    changeButton.text = "Mode: \n"+s;
+  }
+
+  private val nameLabel = new sw.Label(" ") {
     foreground = UISkin.labelForeground
   }
-  def reveal = {
+  private val modeLabel = new sw.Label("Note"); 
+  private val changeButton = new sw.Button {
+    action = sw.Action("Switch Mode") {
+      publishTo(ChangeMode, controller)
+    }
+  }
+  private def reveal = {
     controller.currentChord match {
-      case None => label.text = "?"
-      case Some(c) => label.text = c.name
+      case None => nameLabel.text = "?"
+      case Some(c) => nameLabel.text = c.name
     }
   }
 
-  val newGroup = new sw.GridPanel(1, 2) {
-    contents += new sw.BorderPanel {
-      val changeButton = new sw.Button {
-	action = sw.Action("Note") {
-	  publishTo(ChangeMode, controller)
-	}
-      }
-      val label = new sw.Label("Note");
-      layout(changeButton) = sw.BorderPanel.Position.West;
-      layout(label) = sw.BorderPanel.Position.Center;
+  private val newGroup = new sw.GridPanel(1, 2) {
+    contents += new sw.FlowPanel {
+      contents += changeButton
+//      layout(changeButton) = sw.BorderPanel.Position.West;
+//      layout(modeLabel) = sw.BorderPanel.Position.Center;
     }
     contents +=  new sw.GridPanel(2,1) {
       contents += new sw.Button {
@@ -46,10 +55,10 @@ with Observable[InEvt]
       }
     }
   }
-  val noteGroup = new sw.BorderPanel() {
+  private val noteGroup = new sw.BorderPanel() {
     val noteZone = new sw.FlowPanel() {
       background = UISkin.labelBackground
-      contents += label
+      contents += nameLabel
     }
     val buttonZone = new sw.BorderPanel() {
       val playButton = new sw.Button {
