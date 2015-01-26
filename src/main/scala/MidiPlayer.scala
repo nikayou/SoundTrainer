@@ -164,7 +164,23 @@ class MidiPreferences extends Preferences {
   var _dialog = new sw.Dialog {
     title = "Midi Player preferences"
     contents = new sw.GridPanel(4, 1) {
-      contents += new sw.Label("Note volume")
+      
+      contents += new sw.FlowPanel{
+	contents += new sw.Label("Note volume")
+
+	contents += new sw.Slider() {
+	  name = "vs"
+	  min = 0
+	  max = 100
+	  value = 100
+	  majorTickSpacing = 50
+	  minorTickSpacing = 25
+	  labels = Map(0 -> new sw.Label("0"), 100 -> new sw.Label("100"))
+	  paintLabels = true
+	  paintTicks = true
+	}
+
+      }
       contents += new sw.Label("Delay volume")
       contents += new sw.Label("Duration")
       contents += new sw.Label("Channel")
