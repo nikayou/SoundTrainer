@@ -8,7 +8,7 @@ with Observable[InEvt]
 {
   observe(controller)
   override def receive (e: OutEvt) = e match {
-    case ShowName(n) => nameLabel.text = n.toString
+    case ShowName(n) => nameLabel.text = n
     case Hide => nameLabel.text = " "
     case ChangedMode (t) => if (t) changeModeName("Chord")
 			    else changeModeName("Note")

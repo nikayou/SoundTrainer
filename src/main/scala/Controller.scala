@@ -55,9 +55,9 @@ with Observable[OutEvt]
     case ModeChord => { changeMode(true) }
     case ModeNote => { changeMode(false) }
     case Change(show, play) => { 
-      val c : Chord[_] = if (modeChord) newChord else newNote;
+      val c : Chord[_] = if (modeChord) newChord else newNote
+      if (show) publish(ShowName(c.name)) else publish(Hide)
       if (play) player play (c, 0)
-      if (show) publish(ShowName(c.toString)) else publish(Hide)
     }
     case Show (show) => if (!show) publish(Hide) else {
       currentChord match {
