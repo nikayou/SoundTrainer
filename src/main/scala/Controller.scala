@@ -4,9 +4,11 @@ import scala.util.Random
 
 // events received by the controller
 sealed abstract class InEvt extends swing.event.Event
-case class ChangeNoteEvt (show: Boolean, play: Boolean) extends InEvt
-case class ChangeChordEvt (show: Boolean, play: Boolean) extends InEvt
+case class Change (show: Boolean, play: Boolean) extends InEvt
 case class Show (show: Boolean) extends InEvt
+case object ModeNote extends InEvt
+case object ModeChord extends InEvt
+case object ChangeMode extends InEvt
 case object Play extends InEvt
 
 // events sent by the controller
@@ -25,14 +27,15 @@ with Observable[OutEvt]
   // TODO: don't load a specific instrument but a general database
   val chordsHolder = ChordHolder create (xml loadFromXML("res/chords.xml"))
   val player : Player = new MidiPlayer
-
+  var modeChord : Boolean = true; // true if playing chords, false for notes
   // TODO: preferences and chords filter
 
   // changes the current note for a random note
-  def newNote : Note = { 
+  def newNote : Chord[_] = { 
     val note = player.notes(Random.nextInt (player.notes.length))
-    currentNote = Some(note)
-    note
+    val chord = new Chord(note, List(note))
+    currentChord = Some(chord)
+    chord
   }
 
   def newChord : Chord[_] = { 
@@ -49,33 +52,26 @@ with Observable[OutEvt]
   }
 
   override def receive (e: InEvt) = e match {
-    case ChangeNoteEvt(show, play) => { 
-      val n = newNote
-      if (play) player play (n, 0)
-      if (show) publish(ShowName(n.toString)) else publish(Hide)
-    }
-    case ChangeChordEvt(show, play) => { 
-      val c = newChord
+    case ChangeMode => { modeChord = !modeChord }
+    case ModeChord => { modeChord = true }
+    case ModeNote => { modeChord = false }
+    case Change(show, play) => { 
+      val c : Chord[_] = if (modeChord) newChord else newNote;
       if (play) player play (c, 0)
-      if (show) publish(ShowName(c.name)) else publish(Hide)
+      if (show) publish(ShowName(c.toString)) else publish(Hide)
     }
     case Show (show) => if (!show) publish(Hide) else {
-      currentNote match {
-	case Some(n) => publish(ShowName(n.toString))
-	case None => currentChord match {
-	  case Some(c) => publish(ShowName(c.name))
-	  case None => publish(ShowName("?"))
-	}
+      currentChord match {
+	case Some(c) => publish(ShowName(c.name))
+	case None => publish(ShowName("?"))
       }
     }
-    case Play => currentNote match {
-	case Some(n) => player play (n, 0)
-	case None => currentChord match {
-	  case Some(c) => player play (c, 0)
-	  case None => 
-	}
-      }
+    
+    case Play => currentChord match {
+      case Some(c) => player play (c, 0)
+      case None => 
+    }
   }
 
-}
 
+}

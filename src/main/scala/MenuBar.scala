@@ -16,15 +16,15 @@ with Observable[InEvt]
   var skinDialog : Option[sw.Dialog] = None
   var instrumentsPlugins : List[Instrument] = Nil
   contents += new sw.Menu("New") {
-    contents += new sw.MenuItem (new sw.Action("Note") {
-      def apply = publishTo(ChangeNoteEvt(true, false), controller)
+    contents += new sw.MenuItem (new sw.Action("Name") {
+      def apply = publishTo(Change(true, false), controller)
     })
     contents += new sw.MenuItem (new sw.Action("Sound") {
-      def apply = publishTo(ChangeNoteEvt(false, true), controller)
+      def apply = publishTo(Change(false, true), controller)
     })
   }
   contents += new sw.Menu("Reveal") {
-    contents += new sw.MenuItem (new sw.Action("Note") {
+    contents += new sw.MenuItem (new sw.Action("Name") {
       def apply = println("revealing note")
     })
     contents += new sw.MenuItem (new sw.Action("Sound") {

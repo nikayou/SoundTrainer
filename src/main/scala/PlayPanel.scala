@@ -8,8 +8,8 @@ with Observable[InEvt]
 {
   observe(controller)
   override def receive (e: OutEvt) = e match {
-	case ShowName(n) => label.text = n.toString
-	  case Hide => label.text = " "
+    case ShowName(n) => label.text = n.toString
+    case Hide => label.text = " "
   }
 
   val label = new sw.Label(" ") {
@@ -22,23 +22,34 @@ with Observable[InEvt]
     }
   }
 
-//  val newGroup = new sw.BoxPanel(sw.Orientation.Vertical) {
-  val newGroup = new sw.GridPanel(2, 1) {
-    contents += new sw.Button {
-      action = sw.Action("Sound") {
-	publishTo(ChangeNoteEvt(false, true), controller)
+  val newGroup = new sw.GridPanel(1, 2) {
+    contents += new sw.BorderPanel {
+      val changeButton = new sw.Button {
+	action = sw.Action("Note") {
+	  publishTo(ChangeMode, controller)
+	}
       }
+      val label = new sw.Label("Note");
+      layout(changeButton) = sw.BorderPanel.Position.West;
+      layout(label) = sw.BorderPanel.Position.Center;
     }
-    contents += new sw.Button {
-      action = sw.Action("Note") {
-	publishTo(ChangeNoteEvt(true, false), controller)
+    contents +=  new sw.GridPanel(2,1) {
+      contents += new sw.Button {
+	action = sw.Action("Sound") {
+	  publishTo(Change(false, true), controller)
+	}
+      }
+      contents += new sw.Button {
+	action = sw.Action("Name") {
+	  publishTo(Change(true, false), controller)
+	}
       }
     }
   }
   val noteGroup = new sw.BorderPanel() {
     val noteZone = new sw.FlowPanel() {
-	background = UISkin.labelBackground
-	contents += label
+      background = UISkin.labelBackground
+      contents += label
     }
     val buttonZone = new sw.BorderPanel() {
       val playButton = new sw.Button {
@@ -57,8 +68,8 @@ with Observable[InEvt]
     layout(noteZone) = sw.BorderPanel.Position.North
     layout(buttonZone) = sw.BorderPanel.Position.South    
   }
-//  layout(newGroup) = sw.BorderPanel.Position.West
-//  layout(noteGroup) = sw.BorderPanel.Position.Center
+  //  layout(newGroup) = sw.BorderPanel.Position.West
+  //  layout(noteGroup) = sw.BorderPanel.Position.Center
   contents += newGroup
   contents += noteGroup
 

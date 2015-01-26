@@ -80,7 +80,7 @@ class MidiPlayer extends Player
       map + (("C"+maxPitch) -> index)
       // return will inject this map in midiCodes
     }
-  override val notes = (midiCodes keys).toSeq
+  override val notes : Seq[String] = (midiCodes keys).toSeq
   /**
    * Plays the given Chord (or Note) with the midi synthesizer set with the
    * given instrument midi channel.
