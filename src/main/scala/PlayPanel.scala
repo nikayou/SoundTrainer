@@ -8,7 +8,7 @@ with Observable[InEvt]
 {
   observe(controller)
   override def receive (e: OutEvt) = e match {
-    case ShowName(n) => nameLabel.text = n.toString
+    case ShowName(n) => nameLabel.text = n
     case Hide => nameLabel.text = " "
     case ChangedMode (t) => if (t) changeModeName("Chord")
 			    else changeModeName("Note")
@@ -25,7 +25,7 @@ with Observable[InEvt]
   }
   private val modeLabel = new sw.Label("Note"); 
   private val changeButton = new sw.Button {
-    action = sw.Action("Switch Mode") {
+    action = sw.Action("Mode: \nChord") {
       publishTo(ChangeMode, controller)
     }
   }

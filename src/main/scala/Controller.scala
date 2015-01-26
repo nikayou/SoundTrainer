@@ -26,7 +26,7 @@ with Observable[OutEvt]
   // TODO: don't load a specific instrument but a general database
   val chordsHolder = ChordHolder create (xml loadFromXML("res/chords.xml"))
   val player : Player = new MidiPlayer
-  var modeChord : Boolean = true; // true if playing chords, false for notes
+  private var modeChord : Boolean = true; // true if playing chords, false for notes
   // TODO: preferences and chords filter
 
   // changes the current note for a random note
@@ -55,9 +55,9 @@ with Observable[OutEvt]
     case ModeChord => { changeMode(true) }
     case ModeNote => { changeMode(false) }
     case Change(show, play) => { 
-      val c : Chord[_] = if (modeChord) newChord else newNote;
+      val c : Chord[_] = if (modeChord) newChord else newNote
+      if (show) publish(ShowName(c.name)) else publish(Hide)
       if (play) player play (c, 0)
-      if (show) publish(ShowName(c.toString)) else publish(Hide)
     }
     case Show (show) => if (!show) publish(Hide) else {
       currentChord match {
