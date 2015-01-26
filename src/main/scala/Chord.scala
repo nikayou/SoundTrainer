@@ -12,7 +12,11 @@ package soundTrainer
 class Chord [N] (private val _name: String, private val _notes: List[N]) 
 {
  type Note = N
-  override def toString = _name + ": " + (_notes map (_.toString) reduceLeft(_+"->"+_))
+  override def toString = if (_notes.length > 1) {
+    _name + ": " + (_notes map (_.toString) reduceLeft(_+"->"+_))
+  } else {
+    _name
+  }
   def name : String = _name
   def notes : List[N] = _notes
 }

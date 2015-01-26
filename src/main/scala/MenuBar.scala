@@ -25,10 +25,10 @@ with Observable[InEvt]
   }
   contents += new sw.Menu("Reveal") {
     contents += new sw.MenuItem (new sw.Action("Name") {
-      def apply = println("revealing note")
+      def apply = publishTo(Show(true), controller)
     })
     contents += new sw.MenuItem (new sw.Action("Sound") {
-      def apply = println("revealing sound")
+      def apply = publishTo(Play, controller)
     })
   }
   contents += new sw.Menu("Instruments") {
