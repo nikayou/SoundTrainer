@@ -191,7 +191,10 @@ class MidiPreferences extends Preferences {
 	contents += new sw.Label("Note delay (ms)")
 	contents += new LocalSlider("nd", 0, 1000, 100)
       }
-      contents += new sw.Label("Duration")
+      contents += new sw.FlowPanel { 
+	contents += new sw.Label("Duration (ms)")
+	contents += new LocalSlider("t", 100, 2000, 500)
+      }
       contents += new sw.Label("Channel")
     }
     pack()
