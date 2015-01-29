@@ -162,26 +162,35 @@ class MidiPreferences extends Preferences {
 
   // config dialog 
   var _dialog = new sw.Dialog {
+    class LocalSlider(_name : String,
+		      _min : Int, _max : Int, 
+		      _value : Int) 
+    extends sw.Slider {
+      min = _min
+      max = _max
+      value = _value
+      name = _name
+      majorTickSpacing = (max - min) / 2
+      minorTickSpacing = majorTickSpacing / 2
+      var middle = min+majorTickSpacing;
+      labels = Map(min -> new sw.Label(""+min), 
+		   max -> new sw.Label(""+max),
+		   middle -> new sw.Label(""+middle))
+      paintLabels = true
+      paintTicks = true
+    }
     title = "Midi Player preferences"
     contents = new sw.GridPanel(4, 1) {
       
-      contents += new sw.FlowPanel{
+      contents += new sw.FlowPanel {
 	contents += new sw.Label("Note volume")
-
-	contents += new sw.Slider() {
-	  name = "vs"
-	  min = 0
-	  max = 100
-	  value = 100
-	  majorTickSpacing = 50
-	  minorTickSpacing = 25
-	  labels = Map(0 -> new sw.Label("0"), 100 -> new sw.Label("100"))
-	  paintLabels = true
-	  paintTicks = true
-	}
+	contents += new LocalSlider("vs", 0, 100, 100)
 
       }
-      contents += new sw.Label("Delay volume")
+      contents += new sw.FlowPanel {
+	contents += new sw.Label("Note delay (ms)")
+	contents += new LocalSlider("nd", 0, 1000, 100)
+      }
       contents += new sw.Label("Duration")
       contents += new sw.Label("Channel")
     }
