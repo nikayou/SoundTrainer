@@ -195,7 +195,12 @@ class MidiPreferences extends Preferences {
 	contents += new sw.Label("Duration (ms)")
 	contents += new LocalSlider("t", 100, 2000, 500)
       }
-      contents += new sw.Label("Channel")
+      contents += new sw.FlowPanel { 
+	contents += new sw.Label("Channel")
+	contents += new sw.ComboBox(for (i <- 0 to 255) yield i) {
+	  name = "ch"
+	}
+      }
     }
     pack()
   }
