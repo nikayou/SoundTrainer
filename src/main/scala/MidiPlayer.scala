@@ -99,6 +99,7 @@ class MidiPlayer extends Player
     
     Thread.sleep(_preferences.duration) // TODO: customise duration of chord
     playServer ! Stop
+    playServer ! SetInstrument(_preferences.instrument)
   }
 
   override def play (chord: Chord[_]) = play(chord, _preferences.instrument)

@@ -10,6 +10,7 @@ case object ModeNote extends InEvt
 case object ModeChord extends InEvt
 case object ChangeMode extends InEvt
 case object Play extends InEvt
+case class PlayWith (instrument: Int) extends InEvt
 
 // events sent by the controller
 sealed abstract class OutEvt extends swing.event.Event
@@ -70,6 +71,11 @@ with Observable[OutEvt]
       case Some(c) => player play (c)
       case None => 
     }
+    case PlayWith (i) => currentChord match {
+      case Some(c) => player.play(c, i)
+      case None => 
+    }
+
   }
 
     private def changeMode (chord: Boolean) = {

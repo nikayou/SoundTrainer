@@ -6,5 +6,5 @@ trait AppController
   val chordsHolder : ChordHolder
   val player : Player
   var currentChord : Option[Chord[_]] = None
-  var currentNote : Option[Note] = None
+//  var currentNote : Option[Note] = None
 }
