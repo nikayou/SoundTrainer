@@ -8,7 +8,6 @@ package soundTrainer
  * between two notes of the same chord, so they need to be always played in
  * the same order. 
  */
-// TODO: a chord is different from one instrument to an other
 class Chord [N] (private val _name: String, private val _notes: List[N]) 
 {
  type Note = N

@@ -24,7 +24,6 @@ with Observable[OutEvt]
 {
   type Note = String
   private val xml = new XMLChordLoader
-  // TODO: don't load a specific instrument but a general database
   val chordsHolder = ChordHolder create (xml loadFromXML("res/chords.xml"))
   val player : Player = new MidiPlayer
   private var modeChord : Boolean = true; // true if playing chords, false for notes

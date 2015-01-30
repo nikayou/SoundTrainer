@@ -23,7 +23,6 @@ case object Stop
  * // TODO: 
  * - close sequencer when program ends
  * - check if notes and codes can varry with a different synthesizer
- * - check if a separate thread for playing sounds is a good idea
  * - handle exception with devices, threads and availability
  */
 class MidiPlayer extends Player 

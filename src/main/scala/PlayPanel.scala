@@ -39,8 +39,6 @@ with Observable[InEvt]
   private val newGroup = new sw.GridPanel(1, 2) {
     contents += new sw.FlowPanel {
       contents += changeButton
-//      layout(changeButton) = sw.BorderPanel.Position.West;
-//      layout(modeLabel) = sw.BorderPanel.Position.Center;
     }
     contents +=  new sw.GridPanel(2,1) {
       contents += new sw.Button {
@@ -77,8 +75,6 @@ with Observable[InEvt]
     layout(noteZone) = sw.BorderPanel.Position.North
     layout(buttonZone) = sw.BorderPanel.Position.South    
   }
-  //  layout(newGroup) = sw.BorderPanel.Position.West
-  //  layout(noteGroup) = sw.BorderPanel.Position.Center
   contents += newGroup
   contents += noteGroup
 
