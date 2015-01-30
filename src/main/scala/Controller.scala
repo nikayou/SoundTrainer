@@ -46,7 +46,7 @@ with Observable[OutEvt]
 
   
   private def playCurrentNote = currentChord match {
-    case Some(c) => player play (c, 0)
+    case Some(c) => player play (c)
     case _ => println("no current chord") // TODO: errlog
   }
 
@@ -57,7 +57,7 @@ with Observable[OutEvt]
     case Change(show, play) => { 
       val c : Chord[_] = if (modeChord) newChord else newNote
       if (show) publish(ShowName(c.name)) else publish(Hide)
-      if (play) player play (c, 0)
+      if (play) player play (c)
     }
     case Show (show) => if (!show) publish(Hide) else {
       currentChord match {
@@ -67,7 +67,7 @@ with Observable[OutEvt]
     }
     
     case Play => currentChord match {
-      case Some(c) => player play (c, 0)
+      case Some(c) => player play (c)
       case None => 
     }
   }

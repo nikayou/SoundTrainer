@@ -35,10 +35,10 @@ class MidiPlayer extends Player
   {
 
     def receive = {
-      case SetInstrument(i) => channels (_preferences.channel) programChange i
+      case SetInstrument(i) => channels (0) programChange i
       case PlayNote(n) 
-      => channels (_preferences.channel) noteOn (n, _preferences.volume);
-      case Stop => channels (_preferences.channel) allNotesOff
+      => channels (0) noteOn (n, _preferences.volume);
+      case Stop => channels (0) allNotesOff
     }
   }
 
@@ -101,12 +101,17 @@ class MidiPlayer extends Player
     playServer ! Stop
   }
 
-  def play (note : String, instru: Int) = {
+  override def play (chord: Chord[_]) = play(chord, _preferences.instrument)
+
+/*  def play (note : String, instru: Int) = {
     playServer ! SetInstrument(instru)
     playServer ! PlayNote(midiCodes(note.toString))
     Thread.sleep(_preferences.duration) // TODO: customise duration of chord
     playServer ! Stop    
   }
+  def play (note: String) = play note _preferences.instrument
+
+* */
 
 }
 
@@ -151,14 +156,14 @@ class MidiPreferences extends Preferences {
   def duration_=(d: Int) = if (d < 0) { _duration = 0 } else { _duration = d }
   def duration = _duration
   
-  // channel with which sounds are played
-  var _channel: Int = 0
-  def channel_=(c: Int) = {
-    if (c < 0) { _channel = 0 }
-    else if (c > 255) { _channel = 255 }
-    else _channel = c
+  // instrument with which sounds are played
+  var _instrument: Int = 0
+  def instrument_=(c: Int) = {
+    if (c < 0) { _instrument = 0 }
+    else if (c > 255) { _instrument = 255 }
+    else _instrument = c
   }
-  def channel = _channel
+  def instrument = _instrument
 
   // config dialog 
   var _dialog = new sw.Dialog {
@@ -185,8 +190,8 @@ class MidiPreferences extends Preferences {
       val nv = new LocalSlider("nv", 0, 100, 100)
       val nd = new LocalSlider("nd", 0, 1000, 100)
       val t = new LocalSlider("t", 100, 2000, 500)
-      val ch = new sw.ComboBox(for (i <- 0 to 255) yield i) {
-	name = "ch"
+      val inst = new sw.ComboBox(for (i <- 0 to 255) yield i) {
+	name = "inst"
       }
       contents += new sw.FlowPanel {
 	contents += new sw.Label("Note volume")
@@ -202,8 +207,8 @@ class MidiPreferences extends Preferences {
 	contents += t
       }
       contents += new sw.FlowPanel { 
-	contents += new sw.Label("Channel")
-	contents += ch
+	contents += new sw.Label("Instrument")
+	contents += inst
       }
       contents += new sw.Button{
 	action = new sw.Action("OK"){
@@ -211,7 +216,7 @@ class MidiPreferences extends Preferences {
 	    volume = nv.value
 	    delay = nd.value
 	    duration = t.value
-	    channel = ch.peer.getSelectedItem.asInstanceOf[Int]
+	    instrument = inst.peer.getSelectedItem.asInstanceOf[Int]
 	    close
 	  }
 	}
