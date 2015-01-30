@@ -207,7 +207,13 @@ class MidiPreferences extends Preferences {
       }
       contents += new sw.Button{
 	action = new sw.Action("OK"){
-	def apply = println("nv :"+nv.value)
+	  def apply = {
+	    volume = nv.value
+	    delay = nd.value
+	    duration = t.value
+	    channel = ch.peer.getSelectedItem.asInstanceOf[Int]
+	    close
+	  }
 	}
       }
     }
