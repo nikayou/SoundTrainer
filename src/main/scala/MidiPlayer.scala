@@ -180,25 +180,34 @@ class MidiPreferences extends Preferences {
       paintTicks = true
     }
     title = "Midi Player preferences"
-    contents = new sw.GridPanel(4, 1) {
-      
+    
+    contents = new sw.GridPanel(5, 1) {
+      val nv = new LocalSlider("nv", 0, 100, 100)
+      val nd = new LocalSlider("nd", 0, 1000, 100)
+      val t = new LocalSlider("t", 100, 2000, 500)
+      val ch = new sw.ComboBox(for (i <- 0 to 255) yield i) {
+	name = "ch"
+      }
       contents += new sw.FlowPanel {
 	contents += new sw.Label("Note volume")
-	contents += new LocalSlider("vs", 0, 100, 100)
+	contents += nv
 
       }
       contents += new sw.FlowPanel {
 	contents += new sw.Label("Note delay (ms)")
-	contents += new LocalSlider("nd", 0, 1000, 100)
+	contents += nd
       }
       contents += new sw.FlowPanel { 
 	contents += new sw.Label("Duration (ms)")
-	contents += new LocalSlider("t", 100, 2000, 500)
+	contents += t
       }
       contents += new sw.FlowPanel { 
 	contents += new sw.Label("Channel")
-	contents += new sw.ComboBox(for (i <- 0 to 255) yield i) {
-	  name = "ch"
+	contents += ch
+      }
+      contents += new sw.Button{
+	action = new sw.Action("OK"){
+	def apply = println("nv :"+nv.value)
 	}
       }
     }
