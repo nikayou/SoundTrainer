@@ -200,7 +200,7 @@ class MidiPreferences extends Preferences {
       val nv = new LocalSlider("nv", 0, 100, 100)
       val nd = new LocalSlider("nd", 0, 1000, 100)
       val t = new LocalSlider("t", 100, 2000, 500)
-      val inst = new sw.ComboBox(for (i <- 0 to 128) yield i) {
+      val inst = new sw.ComboBox(for (i <- 0 to 127) yield i) {
 	name = "inst"
       }
       contents += new sw.FlowPanel {
