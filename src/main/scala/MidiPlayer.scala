@@ -12,9 +12,10 @@ import akka.actor.Props
 import scala.{swing => sw}
 
 case class SetInstrument(instrument: Int)
-case class PlayNote(note: Int)
 case class PlayChord(chord: Chord[_])
 case object Stop
+case object Init
+case object Close
 
 /*
  * MidiPlayer is one concrete class for Player that plays notes using a
@@ -34,24 +35,30 @@ class MidiPlayer extends Player
   class PlayServer extends Actor 
   {
 
+    var playing: Boolean = false;
+
     def receive = {
-      case SetInstrument(i) => channels (0) programChange i
-      case PlayNote(n) => playNote(midiCodes(n.toString))
+      case Init => changeInstrument (_preferences.instrument)
+      case SetInstrument(i) => changeInstrument (i)
       case Stop => stop
       case PlayChord(chord)
-      =>  { chord.notes foreach { 
-	x => {playNote(midiCodes(x.toString))
-	      Thread.sleep(_preferences.delay)}}
-	   Thread.sleep(_preferences.duration)
-	   stop
-	 }
-    }
+      =>  if (!playing) { playing = true
+			 chord.notes foreach { 
+			   x => {playNote(midiCodes(x.toString))
+				 Thread.sleep(_preferences.delay)}}
+			 Thread.sleep(_preferences.duration)
+			 stop
+			 }
+      }
 
     private def playNote (n: Int) = {
       channels (0) noteOn (n, _preferences.volume)
     }
 
-    private def stop = channels (0) allNotesOff
+    private def stop = { channels(0).allNotesOff
+			playing = false }
+
+    private def changeInstrument (i: Int) = channels (0) programChange i
 
   }
 
@@ -79,9 +86,9 @@ class MidiPlayer extends Player
       val notes = List("C","C#","D","D#","E","F","F#","G","G#","A","A#","B")
       val maxPitch = 8 // TODO: can this varry with the sequencer?
       /* note:
-       * pitch changes on the C, but first notes on the spectrum are A0, A#0, B0,
-       * and the very last is C8. We need to cheat for those values.
-       */
+      * pitch changes on the C, but first notes on the spectrum are A0, A#0, B0,
+      * and the very last is C8. We need to cheat for those values.
+      */
       // this var map will be injected in a val, so it won't be modifiable
       var map : Map[String, Int] = Map("A0"->21,"A#0"->22,"B0"->23)
       var index = 24;
@@ -95,13 +102,12 @@ class MidiPlayer extends Player
     }
   override val notes : Seq[String] = (midiCodes keys).toSeq
   /**
-   * Plays the given Chord (or Note) with the midi synthesizer set with the
-   * given instrument midi channel.
-   * Pre-conditions: midi sequencer should be available, midiCodes must have
-   * been initialised
-   * Post-condition: played sounds have been stopped, (threads have been stopped)
-   */
-  // TODO: maybe play that in a separate thread in order not to block?
+  * Plays the given Chord (or Note) with the midi synthesizer set with the
+  * given instrument midi channel.
+  * Pre-conditions: midi sequencer should be available, midiCodes must have
+  * been initialised
+  * Post-condition: played sounds have been stopped, (threads have been stopped)
+  */
   // TODO: catch exceptions (key not found + channels + noteOn)
   override def play (chord : Chord [_], instru : Int) = {
     playServer ! SetInstrument(instru)
@@ -109,17 +115,12 @@ class MidiPlayer extends Player
     playServer ! SetInstrument(_preferences.instrument)
   }
 
-  override def play (chord: Chord[_]) = play(chord, _preferences.instrument)
+  override def play (chord: Chord[_]) = {
+    playServer ! SetInstrument(_preferences.instrument)
+    playServer ! PlayChord(chord)
+  }
 
-  /*  def play (note : String, instru: Int) = {
-   playServer ! SetInstrument(instru)
-   playServer ! PlayNote(midiCodes(note.toString))
-   Thread.sleep(_preferences.duration) // TODO: customise duration of chord
-   playServer ! Stop    
-   }
-   def play (note: String) = play note _preferences.instrument
-
-* */
+  playServer ! Init
 
 }
 
@@ -142,6 +143,7 @@ object MidiPlayer
 // Midi preferences
 
 class MidiPreferences extends Preferences {
+  // TODO: load preferences from file
   var _volume : Int = 100
   def volume = _volume
   def volume_=(v: Int) = {
