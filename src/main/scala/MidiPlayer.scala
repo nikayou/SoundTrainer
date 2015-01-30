@@ -13,6 +13,7 @@ import scala.{swing => sw}
 
 case class SetInstrument(instrument: Int)
 case class PlayNote(note: Int)
+case class PlayChord(chord: Chord[_])
 case object Stop
 
 /*
@@ -36,10 +37,23 @@ class MidiPlayer extends Player
 
     def receive = {
       case SetInstrument(i) => channels (0) programChange i
-      case PlayNote(n) 
-      => channels (0) noteOn (n, _preferences.volume);
-      case Stop => channels (0) allNotesOff
+      case PlayNote(n) => playNote(midiCodes(n.toString))
+      case Stop => stop
+      case PlayChord(chord)
+      =>  { chord.notes foreach { 
+	x => {playNote(midiCodes(x.toString))
+	      Thread.sleep(_preferences.delay)}}
+	   Thread.sleep(_preferences.duration)
+	   stop
+	 }
     }
+
+    private def playNote (n: Int) = {
+      channels (0) noteOn (n, _preferences.volume)
+    }
+
+    private def stop = channels (0) allNotesOff
+
   }
 
   val actorSystem = ActorSystem("playSystem") //TODO: shutdown when leaving
@@ -92,25 +106,19 @@ class MidiPlayer extends Player
   // TODO: catch exceptions (key not found + channels + noteOn)
   override def play (chord : Chord [_], instru : Int) = {
     playServer ! SetInstrument(instru)
-    chord.notes foreach { 
-      x => playServer ! PlayNote(midiCodes(x.toString))
-      Thread.sleep(_preferences.delay) //TODO: customise this delay
-    }
-    
-    Thread.sleep(_preferences.duration) // TODO: customise duration of chord
-    playServer ! Stop
+    playServer ! PlayChord(chord)
     playServer ! SetInstrument(_preferences.instrument)
   }
 
   override def play (chord: Chord[_]) = play(chord, _preferences.instrument)
 
-/*  def play (note : String, instru: Int) = {
-    playServer ! SetInstrument(instru)
-    playServer ! PlayNote(midiCodes(note.toString))
-    Thread.sleep(_preferences.duration) // TODO: customise duration of chord
-    playServer ! Stop    
-  }
-  def play (note: String) = play note _preferences.instrument
+  /*  def play (note : String, instru: Int) = {
+   playServer ! SetInstrument(instru)
+   playServer ! PlayNote(midiCodes(note.toString))
+   Thread.sleep(_preferences.duration) // TODO: customise duration of chord
+   playServer ! Stop    
+   }
+   def play (note: String) = play note _preferences.instrument
 
 * */
 
