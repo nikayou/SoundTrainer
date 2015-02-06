@@ -3,7 +3,7 @@ package soundTrainer
 import scala.{swing => sw}
 
 
-abstract class Instrument
+abstract class Instrument extends Observer[OutEvt]
 {
 
   abstract class Panel extends sw.Panel {
@@ -22,6 +22,8 @@ abstract class Instrument
   val configDialog : Option[sw.Dialog] = None
   // a specific player can be provided, if the sound is different
   val player : Option[Player] = None
+  def receive (e: OutEvt) : Unit
+
 
 }
 

@@ -14,8 +14,8 @@ case class PlayWith (instrument: Int) extends InEvt
 
 // events sent by the controller
 sealed abstract class OutEvt extends swing.event.Event
-case class ChangedMode(chord: Boolean) extends OutEvt
-case class ShowName(n: String) extends OutEvt
+case class ChangedMode (chord: Boolean) extends OutEvt
+case class ShowName (n: String) extends OutEvt
 case object Hide extends OutEvt
 
 class Controller extends AppController 
@@ -29,7 +29,10 @@ with Observable[OutEvt]
   private var modeChord : Boolean = true 
   // instruments database
   val instruments : List[Instrument] = List(new DefaultPiano(player))
-
+  // registring instruments for receiving notes to display 
+  for (i <- instruments) {
+    addObserver (i)
+  }
 
   // TODO: preferences and chords filter
 
