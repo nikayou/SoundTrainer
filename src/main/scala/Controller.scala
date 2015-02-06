@@ -25,7 +25,12 @@ with Observable[OutEvt]
   type Note = String
   val chordsHolder = ChordHolder create (XMLChordLoader.loadFromXML("res/chords.xml"))
   val player : Player = new MidiPlayer
-  private var modeChord : Boolean = true; // true if playing chords, false for notes
+  // true if playing chords, false for notes
+  private var modeChord : Boolean = true 
+  // instruments database
+  val instruments : List[Instrument] = List(new DefaultPiano(player))
+
+
   // TODO: preferences and chords filter
 
   // changes the current note for a random note
@@ -76,9 +81,10 @@ with Observable[OutEvt]
 
   }
 
-    private def changeMode (chord: Boolean) = {
-      modeChord = chord
-      publish(ChangedMode(chord))
-    }
+  private def changeMode (chord: Boolean) = {
+    modeChord = chord
+    publish(ChangedMode(chord))
+  }
+
 
 }

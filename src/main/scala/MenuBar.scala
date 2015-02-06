@@ -2,7 +2,7 @@ package soundTrainer
 
 import scala.{swing => sw}
 
-class MenuBar(val controller: Controller) extends sw.MenuBar
+class MenuBar (val controller: Controller) extends sw.MenuBar
 with Observable[InEvt]
 {
   controller.observe(this)
@@ -14,7 +14,7 @@ with Observable[InEvt]
     }
   var chordsDialog : sw.Dialog = controller.chordsHolder.dialog
   var skinDialog : Option[sw.Dialog] = None
-  var instrumentsPlugins : List[Instrument] = Nil
+
   contents += new sw.Menu("New") {
     contents += new sw.MenuItem (new sw.Action("Name") {
       def apply = publishTo(Change(true, false), controller)
@@ -32,7 +32,13 @@ with Observable[InEvt]
     })
   }
   contents += new sw.Menu("Instruments") {
-    //TODO: load plugins
+    println("loading instruments");
+    for (i <- controller.instruments) {
+      println("insturment:"+i.name);
+      contents += new sw.MenuItem (new sw.Action(i.name) {
+	def apply = (new sw.Dialog{ contents = i.panel}) open
+      })
+    }
   }
   contents += new sw.Menu("Preferences") {
     contents += new sw.MenuItem(new sw.Action("Chords") {
