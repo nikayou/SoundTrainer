@@ -2,7 +2,6 @@ package soundTrainer
 
 import scala.xml.XML
 
-
 object XMLChordLoader 
 {
   type C = Chord[String]
