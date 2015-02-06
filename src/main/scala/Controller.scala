@@ -23,8 +23,8 @@ with Observer[InEvt]
 with Observable[OutEvt]
 {
   type Note = String
-  private val xml = new XMLChordLoader
-  val chordsHolder = ChordHolder create (xml loadFromXML("res/chords.xml"))
+//  private val xml = new XMLChordLoader
+  val chordsHolder = ChordHolder create (XMLChordLoader.loadFromXML("res/chords.xml"))
   val player : Player = new MidiPlayer
   private var modeChord : Boolean = true; // true if playing chords, false for notes
   // TODO: preferences and chords filter
