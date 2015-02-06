@@ -4,26 +4,27 @@
 you have to guess either the sound or the name. You can also view its 
 position on instruments. 
 
+Current version :  
+![screenshot](screenshot.png)
+
 ## Requirements 
 
 ### Features 
 
 - Play notes/chords randomly selected
-- Show a guitar with all possible positions
-- Show a piano with (unique?) position
 - 2 modes: guess the name or guess the sound
+- Showing positions on instruments
 
 ### Options 
 
-- left-hand mode (for guitar)
-- select played chords/notes (presets for guitar, bass, piano)
-- filter notes (*#* or *minor* included or not)
-- ignore the pitch (*C4 = C5*)
+- left-handed mode (for guitar)
+- select played chords/notes (presets for guitar, bass, piano) [Soon]
+- filter notes (*#* or *minor* included or not) [Soon]
+- ignore the pitch (*C4 = C5*) [Soon]
 - set volume
 - set delay between two notes
 - set duration of sounds 
-- choose channel for played sound
-- instruments should play the sound with the good channel
+- change default instrument for playing sounds
 
 ### Extra 
 
