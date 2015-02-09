@@ -36,7 +36,7 @@ with Observable[InEvt]
     for (i <- controller.instruments) {
       println("insturment:"+i.name);
       contents += new sw.MenuItem (new sw.Action(i.name) {
-	def apply = (new sw.Dialog{ contents = i.panel}) open
+	def apply = (new sw.Dialog {contents=i.panel; resizable=false}) open
       })
     }
   }
